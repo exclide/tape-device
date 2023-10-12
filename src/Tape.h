@@ -8,7 +8,7 @@
 class Tape {
 public:
     virtual int read() = 0;
-    virtual void write(int data) = 0;
+    virtual void write(int elem) = 0;
     virtual void moveLeft() = 0;
     virtual void moveRight() = 0;
 };

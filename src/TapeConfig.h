@@ -14,6 +14,7 @@ struct TapeConfig {
     int readDelay = 0;
     int writeDelay = 0;
     int moveTapeDelay = 0;
+    int memoryBlockSize = INT_MAX;
 };
 
 #endif //TAPEROOT_TAPECONFIG_H

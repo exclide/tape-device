@@ -1,3 +1,4 @@
-ReadDelay=100
-WriteDelay=100
-MoveTapeDelay=100
+ReadDelay=0
+WriteDelay=0
+MoveTapeDelay=0
+MemoryBlockSize=4

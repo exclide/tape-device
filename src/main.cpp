@@ -3,13 +3,17 @@
 
 
 int main(int argc, char* argv[]) {
-    auto cfg = ParseCmdLineArguments(argc, argv);
+    TapeConfig cfg;
 
-    std::cout << cfg.outputFile << std::endl;
-    std::cout << cfg.inputFile << std::endl;
-    std::cout << cfg.readDelay << std::endl;
-    std::cout << cfg.writeDelay << std::endl;
-    std::cout << cfg.moveTapeDelay << std::endl;
+    try {
+        cfg = ParseCmdLineArguments(argc, argv);
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        std::cerr << "Correct usage: \n"
+                     "tape -in=input.txt -out=output.txt -cfg=config.txt";
+
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }

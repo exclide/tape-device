@@ -31,14 +31,15 @@ void ParseConfigFile(const std::string& configFile, TapeConfig& cfg) {
             cfg.writeDelay = std::stoi(splitAfterDelimiter(cfgOption));
         } else if (cfgOption.starts_with("MoveTapeDelay=")) {
             cfg.moveTapeDelay = std::stoi(splitAfterDelimiter(cfgOption));
+        } else if (cfgOption.starts_with("MemoryBlockSize=")) {
+            cfg.memoryBlockSize = std::stoi(splitAfterDelimiter(cfgOption));
         }
     }
 }
 
 TapeConfig ParseCmdLineArguments(int argc, char* argv[]) {
-    if (argc < 3) {
-        throw ParseException("Wrong number of arguments. Correct usage: \n"
-                             "tape -in=input.txt -out=output.txt -cfg=config.txt");
+    if (argc < 4) {
+        throw ParseException("Wrong number of arguments");
     }
 
     const std::vector<std::string> args(argv + 1, argv + argc);

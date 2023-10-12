@@ -1,31 +1,15 @@
 #include <iostream>
-#include <vector>
-#include "FileTape.h"
-#include "ParseException.h"
+#include "Parsing.h"
+
 
 int main(int argc, char* argv[]) {
-    if (argc < 3) {
-        throw ParseException("Wrong number of arguments. Correct usage: \n"
-                             "tape -in=input.txt -out=output.txt");
-    }
+    auto cfg = ParseCmdLineArguments(argc, argv);
 
-    const std::vector<std::string> args(argv + 1, argv + argc);
-
-    std::string inputFile;
-    std::string outputFile;
-
-    for (const auto& arg : args) {
-        if (arg.starts_with("-in=")) {
-            inputFile = arg.substr(arg.find('=') + 1);
-        } else if (arg.starts_with("-out=")) {
-            outputFile = arg.substr(arg.find('=') + 1);
-        }
-    }
-
-    if (inputFile.empty() || outputFile.empty()) {
-        throw ParseException("Wrong arguments");
-    }
-
+    std::cout << cfg.outputFile << std::endl;
+    std::cout << cfg.inputFile << std::endl;
+    std::cout << cfg.readDelay << std::endl;
+    std::cout << cfg.writeDelay << std::endl;
+    std::cout << cfg.moveTapeDelay << std::endl;
 
     return EXIT_SUCCESS;
 }

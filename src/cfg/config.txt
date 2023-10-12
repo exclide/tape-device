@@ -1,0 +1,3 @@
+ReadDelay=100
+WriteDelay=100
+MoveTapeDelay=100

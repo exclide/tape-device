@@ -5,19 +5,12 @@
 #ifndef TAPE_TAPEEXCEPTION_H
 #define TAPE_TAPEEXCEPTION_H
 
-#include <exception>
+#include <stdexcept>
 #include <string>
 
-class TapeException : public std::exception {
+class TapeException : public std::runtime_error {
 public:
-    explicit TapeException(const std::string& msg) : msg(msg) {}
-
-    const char* what() const noexcept override {
-        return msg.data();
-    }
-
-private:
-    std::string msg;
+    explicit TapeException(const std::string& msg) : std::runtime_error(msg) {}
 };
 
 #endif //TAPE_TAPEEXCEPTION_H

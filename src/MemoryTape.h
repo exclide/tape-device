@@ -5,4 +5,58 @@
 #ifndef TAPE_MEMORYTAPE_H
 #define TAPE_MEMORYTAPE_H
 
+#include <vector>
+#include "Tape.h"
+#include "TapeConfig.h"
+#include "TapeException.h"
+#include <thread>
+
+class MemoryTape : public Tape {
+public:
+    explicit MemoryTape(const TapeConfig& cfg, const std::vector<int>& tape) : cfg(cfg), tape(tape) {
+
+    }
+
+    int Read() override {
+        std::this_thread::sleep_for(std::chrono::milliseconds(cfg.readDelay));
+        return tape[headPointer];
+    }
+
+    void Write(int elem) override {
+        std::this_thread::sleep_for(std::chrono::milliseconds(cfg.writeDelay));
+        tape[headPointer] = elem;
+    }
+
+    void MoveLeft() override {
+        std::this_thread::sleep_for(std::chrono::milliseconds(cfg.moveTapeDelay));
+        headPointer--;
+    }
+
+    void MoveRight() override {
+        std::this_thread::sleep_for(std::chrono::milliseconds(cfg.moveTapeDelay));
+        headPointer++;
+    }
+
+    bool Eot() const override {
+        return headPointer == tape.size();
+    }
+
+    size_t ElementCount() {
+        return tape.size();
+    }
+
+    void ResetPointer() override {
+        headPointer = 0;
+    }
+
+    size_t GetCursor() const override {
+        return headPointer;
+    }
+
+private:
+    TapeConfig cfg;
+    size_t headPointer = 0;
+    std::vector<int> tape;
+};
+
 #endif //TAPE_MEMORYTAPE_H

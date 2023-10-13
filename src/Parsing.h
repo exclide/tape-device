@@ -35,6 +35,7 @@ void ParseConfigFile(const std::string& configFile, TapeConfig& cfg) {
             cfg.memoryBlockSize = std::stoi(splitAfterDelimiter(cfgOption));
         }
     }
+
 }
 
 TapeConfig ParseCmdLineArguments(int argc, char* argv[]) {

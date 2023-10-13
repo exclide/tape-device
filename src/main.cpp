@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Parsing.h"
+#include "FileTape.h"
+#include "MemoryTape.h"
 
 
 int main(int argc, char* argv[]) {
@@ -13,6 +15,12 @@ int main(int argc, char* argv[]) {
                      "tape -in=input.txt -out=output.txt -cfg=config.txt";
 
         return EXIT_FAILURE;
+    }
+
+    Tape* tape = new FileTape(cfg);
+    for (int i = 0; i < 10; i++) {
+        tape->Write(i);
+        tape->MoveRight();
     }
 
     return EXIT_SUCCESS;

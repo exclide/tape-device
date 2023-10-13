@@ -13,5 +13,5 @@ include_directories($ENV{HOME}/googletest/googletest/include)
 FetchContent_MakeAvailable(googletest)
 
 
-add_executable(TapeUnitTests main.cpp TapeTest.cpp)
+add_executable(TapeUnitTests main.cpp TapeTest.cpp ParseTest.cpp)
 target_link_libraries(TapeUnitTests gtest_main)

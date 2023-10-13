@@ -38,7 +38,6 @@ private:
         tmp->ResetPointer();
 
         tapes.push_back(tmp);
-
     }
 
     std::shared_ptr<Tape> GetTmpTape() const override {

@@ -10,6 +10,7 @@
 #include <utility>
 #include <vector>
 #include <filesystem>
+#include <future>
 
 class TapeSorter {
 public:
@@ -50,50 +51,59 @@ private:
 
     }
 
+    std::shared_ptr<Tape> MergeTwoTapes(const std::shared_ptr<Tape>& leftTape, const std::shared_ptr<Tape>& rightTape) {
+        std::shared_ptr<Tape> mergedTape = GetTmpTape();
+
+        while (!leftTape->Eot() && !rightTape->Eot()) {
+            int leftElem = leftTape->Read();
+            int rightElem = rightTape->Read();
+
+            if (leftElem < rightElem) {
+                mergedTape->Write(leftElem);
+                leftTape->MoveRight();
+            } else {
+                mergedTape->Write(rightElem);
+                rightTape->MoveRight();
+            }
+
+            mergedTape->MoveRight();
+        }
+
+        while (!leftTape->Eot()) {
+            mergedTape->Write(leftTape->Read());
+            leftTape->MoveRight();
+            mergedTape->MoveRight();
+        }
+
+        while (!rightTape->Eot()) {
+            mergedTape->Write(rightTape->Read());
+            rightTape->MoveRight();
+            mergedTape->MoveRight();
+        }
+
+        mergedTape->ResetPointer();
+
+        return mergedTape;
+    }
+
     void MergeUp() {
         while (tapes.size() > 1) {
             size_t writePos = 0;
 
-            for (int i = 0; i < tapes.size(); i += 2) {
-                if (i+1 == tapes.size()) {
-                    tapes[writePos++] = tapes[i];
-                    break;
-                }
+            std::vector<std::future<std::shared_ptr<Tape>>> tapeMergeFutures;
 
-                auto leftTape = tapes[i];
-                auto rightTape = tapes[i+1];
 
-                std::shared_ptr<Tape> mergedTape = GetTmpTape();
+            for (int i = 0; i < tapes.size() - 1; i += 2) {
+                tapeMergeFutures.emplace_back(
+                        std::async(std::launch::async, &TapeSorter::MergeTwoTapes, this, tapes[i], tapes[i+1]));
+            }
 
-                while (!leftTape->Eot() && !rightTape->Eot()) {
-                    int leftElem = leftTape->Read();
-                    int rightElem = rightTape->Read();
+            for (auto& f : tapeMergeFutures) {
+                tapes[writePos++] = f.get();
+            }
 
-                    if (leftElem < rightElem) {
-                        mergedTape->Write(leftElem);
-                        leftTape->MoveRight();
-                    } else {
-                        mergedTape->Write(rightElem);
-                        rightTape->MoveRight();
-                    }
-
-                    mergedTape->MoveRight();
-                }
-
-                while (!leftTape->Eot()) {
-                    mergedTape->Write(leftTape->Read());
-                    leftTape->MoveRight();
-                    mergedTape->MoveRight();
-                }
-
-                while (!rightTape->Eot()) {
-                    mergedTape->Write(rightTape->Read());
-                    rightTape->MoveRight();
-                    mergedTape->MoveRight();
-                }
-
-                mergedTape->ResetPointer();
-                tapes[writePos++] = mergedTape;
+            if (tapes.size() % 2) {
+                tapes[writePos++] = tapes.back();
             }
 
             while (tapes.size() != writePos) {

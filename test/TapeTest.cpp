@@ -7,26 +7,27 @@
 #include "../src/MemoryTapeSorter.h"
 
 TEST(TestTapeSorter, TestSortingCorrect) {
-
     std::vector<int> inputData = {5, 1, 4, 9, 3, 2, 8, 0, 6, 7, 5, 3, 2};
     std::vector<int> sortedInput(inputData);
     std::sort(sortedInput.begin(), sortedInput.end());
 
-    std::vector<int> outputData;
+    for (int i = 2; i <= inputData.size(); i++) {
+        std::vector<int> outputData;
 
-    TapeConfig cfg;
-    cfg.maxMemoryElements = 3;
-    auto inputTape = std::make_shared<MemoryTape>(inputData, cfg);
-    auto outTape = std::make_shared<MemoryTape>(std::vector<int>{}, cfg);
+        TapeConfig cfg;
+        cfg.maxMemoryElements = i;
+        auto inputTape = std::make_shared<MemoryTape>(inputData, cfg);
+        auto outTape = std::make_shared<MemoryTape>(std::vector<int>{}, cfg);
 
 
-    auto tapeSorter = std::make_shared<MemoryTapeSorter>(inputTape, outTape, cfg.maxMemoryElements);
-    tapeSorter->SortTapeToOut();
+        auto tapeSorter = std::make_shared<MemoryTapeSorter>(inputTape, outTape, cfg.maxMemoryElements);
+        tapeSorter->SortTapeToOut();
 
-    while (!outTape->Eot()) {
-        outputData.push_back(outTape->Read());
-        outTape->MoveRight();
+        while (!outTape->Eot()) {
+            outputData.push_back(outTape->Read());
+            outTape->MoveRight();
+        }
+
+        ASSERT_EQ(sortedInput, outputData);
     }
-
-    ASSERT_EQ(sortedInput, outputData);
 }

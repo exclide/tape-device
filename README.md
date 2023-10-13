@@ -17,15 +17,22 @@
 ReadDelay=0
 WriteDelay=0
 MoveTapeDelay=0
-MemoryBlockSize=4
+MaxMemoryElements=4
 ```
 
-Где MemoryBlockSize - сколько элементов мы можем держать в памяти.
+Где MaxMemoryElements - сколько элементов мы можем держать в памяти.
 
 ### Запуск программы
 ```
 tape -in=input.txt -out=output.txt -cfg=config.txt
 ```
+
+### Основные классы
+**Tape** - абстрактный класс, все методы чистые виртуальные.  
+**FileTape, MemoryTape** - реализации класса Tape
+
+**TapeSorter** - абстрактный класс с базовой логикой сортировки  
+**FileTapeSorter, MemoryTapeSorter** - конкретные реализации TapeSorter
 
 ### Алгоритм сортировки
 Пусть N - размер ленты, M - размер памяти, тогда нам понадобится N/M дополнительных 

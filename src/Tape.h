@@ -15,6 +15,7 @@ public:
     virtual size_t ElementCount() = 0;
     virtual void ResetPointer() = 0;
     virtual size_t GetCursor() const = 0;
+    virtual TapeConfig GetConfig() const = 0;
 };
 
 #endif //TAPE_TAPE_H

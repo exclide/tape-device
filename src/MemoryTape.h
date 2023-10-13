@@ -13,7 +13,7 @@
 
 class MemoryTape : public Tape {
 public:
-    explicit MemoryTape(const TapeConfig& cfg, const std::vector<int>& tape) : cfg(cfg), tape(tape) {
+    explicit MemoryTape(const std::vector<int>& tape, const TapeConfig& cfg) : cfg(cfg), tape(tape) {
 
     }
 
@@ -51,6 +51,10 @@ public:
 
     size_t GetCursor() const override {
         return headPointer;
+    }
+
+    TapeConfig GetConfig() const {
+        return cfg;
     }
 
 private:

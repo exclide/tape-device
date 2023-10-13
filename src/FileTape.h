@@ -14,17 +14,21 @@
 
 class FileTape : public Tape {
 public:
-    explicit FileTape(const TapeConfig& cfg) : cfg(cfg), tapeFile(cfg.inputFile, std::ios::in|std::ios::out|std::ios::binary) {
+    explicit FileTape(const std::string& filePath, const TapeConfig& cfg)
+    : cfg(cfg), tapeFile(filePath, std::ios::in|std::ios::out|std::ios::binary|std::ios::trunc) {
         if (!tapeFile.is_open()) {
             throw TapeException("Can't open tape");
         }
+
+        tapeFile.seekg(0, std::ios::end);
+        tapeSize = tapeFile.tellg() / sizeof(int);
     }
 
     int Read() override {
         std::this_thread::sleep_for(std::chrono::milliseconds(cfg.readDelay));
 
         tapeFile.seekg(headPointer * sizeof(int));
-        int res;
+        int res = 0;
         tapeFile.read((char*)&res, sizeof(int));
         return res;
     }
@@ -32,8 +36,12 @@ public:
     void Write(int elem) override {
         std::this_thread::sleep_for(std::chrono::milliseconds(cfg.writeDelay));
 
-        tapeFile.seekp(headPointer * sizeof(int));
+        tapeFile.seekg(headPointer * sizeof(int));
         tapeFile.write((char*)&elem, sizeof(int));
+
+        if (headPointer == tapeSize) {
+            tapeSize++;
+        }
     }
 
     void MoveLeft() override {
@@ -47,27 +55,29 @@ public:
     }
 
     bool Eot() const override {
-        return false;
+        return headPointer == tapeSize;
     }
 
     size_t ElementCount() override {
-        tapeFile.seekg(0, std::ios::end);
-        size_t tapeSize = tapeFile.tellg();
-
-        return tapeSize / sizeof(int);
+        return tapeSize;
     }
 
     void ResetPointer() override {
-        tapeFile.seekg(0);
+        headPointer = 0;
     }
 
     size_t GetCursor() const override {
         return headPointer;
     }
 
+    TapeConfig GetConfig() const {
+        return cfg;
+    }
+
 private:
     TapeConfig cfg;
     size_t headPointer = 0;
+    size_t tapeSize = 0;
     std::fstream tapeFile;
 };
 

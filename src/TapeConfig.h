@@ -8,13 +8,11 @@
 #include <string>
 
 struct TapeConfig {
-    std::string inputFile;
-    std::string outputFile;
-
     int readDelay = 0;
     int writeDelay = 0;
     int moveTapeDelay = 0;
-    int memoryBlockSize = INT_MAX;
+    int maxMemoryElements = INT_MAX;
 };
+
 
 #endif //TAPEROOT_TAPECONFIG_H

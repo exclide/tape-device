@@ -31,41 +31,37 @@ void ParseConfigFile(const std::string& configFile, TapeConfig& cfg) {
             cfg.writeDelay = std::stoi(splitAfterDelimiter(cfgOption));
         } else if (cfgOption.starts_with("MoveTapeDelay=")) {
             cfg.moveTapeDelay = std::stoi(splitAfterDelimiter(cfgOption));
-        } else if (cfgOption.starts_with("MemoryBlockSize=")) {
-            cfg.memoryBlockSize = std::stoi(splitAfterDelimiter(cfgOption));
+        } else if (cfgOption.starts_with("MaxMemoryElements=")) {
+            cfg.maxMemoryElements = std::stoi(splitAfterDelimiter(cfgOption));
         }
     }
 
 }
 
-TapeConfig ParseCmdLineArguments(int argc, char* argv[]) {
+TapeConfig ParseCmdLineArguments(int argc, char* argv[], std::string& inputTape, std::string& outputTape) {
     if (argc < 4) {
         throw ParseException("Wrong number of arguments");
     }
 
     const std::vector<std::string> args(argv + 1, argv + argc);
 
-    std::string inputFile;
-    std::string outputFile;
     std::string configFile;
 
     for (const auto& arg : args) {
         if (arg.starts_with("-in=")) {
-            inputFile = splitAfterDelimiter(arg);
+            inputTape = splitAfterDelimiter(arg);
         } else if (arg.starts_with("-out=")) {
-            outputFile = splitAfterDelimiter(arg);
+            outputTape = splitAfterDelimiter(arg);
         } else if (arg.starts_with("-cfg=")) {
             configFile = splitAfterDelimiter(arg);
         }
     }
 
-    if (inputFile.empty() || outputFile.empty() || configFile.empty()) {
+    if (inputTape.empty() || outputTape.empty() || configFile.empty()) {
         throw ParseException("Wrong arguments");
     }
 
     TapeConfig cfg;
-    cfg.inputFile = inputFile;
-    cfg.outputFile = outputFile;
 
     ParseConfigFile(configFile, cfg);
 

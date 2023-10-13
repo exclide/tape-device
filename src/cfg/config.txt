@@ -1,4 +1,4 @@
 ReadDelay=0
 WriteDelay=0
 MoveTapeDelay=0
-MemoryBlockSize=4
+MaxMemoryElements=4

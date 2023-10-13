@@ -38,8 +38,6 @@ int main(int argc, char* argv[]) {
     auto sorter = std::make_shared<FileTapeSorter>(inputTape, outputTape, tapeConfig.maxMemoryElements);
     sorter->SortTapeToOut();
 
-    outputTape->ResetPointer();
-
     while (!outputTape->Eot()) {
         std::cout << outputTape->Read();
         outputTape->MoveRight();

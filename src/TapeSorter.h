@@ -47,6 +47,7 @@ private:
         if (!buffer.empty()) {
             WriteBuffer(buffer);
         }
+
     }
 
     void MergeUp() {
@@ -86,6 +87,7 @@ private:
                 }
 
                 while (!rightTape->Eot()) {
+                    mergedTape->Write(rightTape->Read());
                     rightTape->MoveRight();
                     mergedTape->MoveRight();
                 }
@@ -108,6 +110,8 @@ private:
             outputTape->MoveRight();
             tapes.front()->MoveRight();
         }
+
+        outputTape->ResetPointer();
     }
 
 protected:

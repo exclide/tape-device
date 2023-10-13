@@ -5,6 +5,8 @@
 #ifndef TAPE_TAPE_H
 #define TAPE_TAPE_H
 
+#include "TapeConfig.h"
+
 class Tape {
 public:
     virtual int Read() = 0;

@@ -24,6 +24,10 @@ public:
 
     void Write(int elem) override {
         std::this_thread::sleep_for(std::chrono::milliseconds(cfg.writeDelay));
+        if (headPointer == tape.size()) {
+            tape.push_back(elem);
+            return;
+        }
         tape[headPointer] = elem;
     }
 

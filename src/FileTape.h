@@ -7,72 +7,32 @@
 
 #include <string>
 #include "Tape.h"
-#include "TapeException.h"
+#include "exceptions/TapeException.h"
 #include "TapeConfig.h"
 #include <thread>
 #include <fstream>
 
 class FileTape : public Tape {
 public:
-    explicit FileTape(const std::string& filePath, const TapeConfig& cfg)
-    : cfg(cfg), tapeFile(filePath, std::ios::in|std::ios::out|std::ios::binary|std::ios::trunc) {
-        if (!tapeFile.is_open()) {
-            throw TapeException("Can't open tape");
-        }
+    explicit FileTape(const std::string& filePath, const TapeConfig& cfg);
 
-        tapeFile.seekg(0, std::ios::end);
-        tapeSize = tapeFile.tellg() / sizeof(int);
-    }
+    int Read() override;
 
-    int Read() override {
-        std::this_thread::sleep_for(std::chrono::milliseconds(cfg.readDelay));
+    void Write(int elem) override;
 
-        tapeFile.seekg(headPointer * sizeof(int));
-        int res = 0;
-        tapeFile.read((char*)&res, sizeof(int));
-        return res;
-    }
+    void MoveLeft() override;
 
-    void Write(int elem) override {
-        std::this_thread::sleep_for(std::chrono::milliseconds(cfg.writeDelay));
+    void MoveRight() override;
 
-        tapeFile.seekg(headPointer * sizeof(int));
-        tapeFile.write((char*)&elem, sizeof(int));
+    bool Eot() const override;
 
-        if (headPointer == tapeSize) {
-            tapeSize++;
-        }
-    }
+    size_t ElementCount() override;
 
-    void MoveLeft() override {
-        std::this_thread::sleep_for(std::chrono::milliseconds(cfg.moveTapeDelay));
-        headPointer--;
-    }
+    void ResetPointer() override;
 
-    void MoveRight() override {
-        std::this_thread::sleep_for(std::chrono::milliseconds(cfg.moveTapeDelay));
-        headPointer++;
-    }
+    size_t GetCursor() const override;
 
-    bool Eot() const override {
-        return headPointer == tapeSize;
-    }
-
-    size_t ElementCount() override {
-        return tapeSize;
-    }
-
-    void ResetPointer() override {
-        headPointer = 0;
-    }
-
-    size_t GetCursor() const override {
-        return headPointer;
-    }
-
-    TapeConfig GetConfig() const {
-        return cfg;
-    }
+    TapeConfig GetConfig() const;
 
 private:
     TapeConfig cfg;
@@ -80,5 +40,6 @@ private:
     size_t tapeSize = 0;
     std::fstream tapeFile;
 };
+
 
 #endif //TAPE_FILETAPE_H

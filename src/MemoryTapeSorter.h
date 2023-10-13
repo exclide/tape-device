@@ -13,20 +13,12 @@
 
 class MemoryTapeSorter : public TapeSorter {
 public:
-    MemoryTapeSorter(const std::shared_ptr<MemoryTape>& in, const std::shared_ptr<MemoryTape>& out, size_t maxMemElements)
-    : TapeSorter(in, out, maxMemElements) {
-    }
+    MemoryTapeSorter(const std::shared_ptr<MemoryTape>& in, const std::shared_ptr<MemoryTape>& out, size_t maxMemElements);
 
 private:
-    void WriteBuffer(std::vector<int>& buffer) override {
-        std::sort(buffer.begin(), buffer.end());
-        auto tmp = std::make_shared<MemoryTape>(buffer, inputTape->GetConfig());
-        tapes.push_back(tmp);
-    }
+    void WriteBuffer(std::vector<int>& buffer) override;
 
-    std::shared_ptr<Tape> GetTmpTape() const override {
-        return std::make_shared<MemoryTape>(std::vector<int>{}, inputTape->GetConfig());
-    }
+    std::shared_ptr<Tape> GetTmpTape() const override;
 
 };
 

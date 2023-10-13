@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "ParseException.h"
+#include "exceptions/ParseException.h"
 #include "TapeConfig.h"
 
 std::string splitAfterDelimiter(const std::string& str, char delimiter = '=') {

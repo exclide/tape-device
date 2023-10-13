@@ -22,6 +22,9 @@ public:
         MergeUp();
     }
 
+    virtual ~TapeSorter() {
+    }
+
 private:
     void Split() {
         int extraTapes = inputTape->ElementCount() / maxMemElements;
@@ -29,18 +32,20 @@ private:
             extraTapes++;
         }
 
-        std::vector<int> buffer(maxMemElements);
-        int writePos = 0;
+        std::vector<int> buffer;
 
         while (!inputTape->Eot()) {
-            buffer[writePos] = inputTape->Read();
+            buffer.push_back(inputTape->Read());
             inputTape->MoveRight();
-            writePos++;
 
-            if (writePos == maxMemElements) {
-                writePos = 0;
+            if (buffer.size() == maxMemElements) {
                 WriteBuffer(buffer);
+                buffer.clear();
             }
+        }
+
+        if (!buffer.empty()) {
+            WriteBuffer(buffer);
         }
     }
 
@@ -48,7 +53,7 @@ private:
         while (tapes.size() > 1) {
             size_t writePos = 0;
 
-            for (int i = 0; i < tapes.size(); i++) {
+            for (int i = 0; i < tapes.size(); i += 2) {
                 if (i+1 == tapes.size()) {
                     tapes[writePos++] = tapes[i];
                     break;
@@ -94,7 +99,15 @@ private:
             }
         }
 
-        outputTape = tapes.front();
+        WriteToOutput();
+    }
+
+    void WriteToOutput() {
+        while (!tapes.front()->Eot()) {
+            outputTape->Write(tapes.front()->Read());
+            outputTape->MoveRight();
+            tapes.front()->MoveRight();
+        }
     }
 
 protected:

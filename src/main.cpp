@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 
     auto outputTape = std::make_shared<FileTape>(outputTapePath, tapeConfig);
 
-    TapeSorter* sorter = new FileTapeSorter(inputTape, outputTape, tapeConfig.maxMemoryElements);
+    auto sorter = std::make_shared<FileTapeSorter>(inputTape, outputTape, tapeConfig.maxMemoryElements);
     sorter->SortTapeToOut();
 
     outputTape->ResetPointer();

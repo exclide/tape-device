@@ -17,14 +17,26 @@ public:
     : TapeSorter(in, out, maxMemElements) {
     }
 
+    ~FileTapeSorter() override {
+        tapes.clear();
+        std::filesystem::remove_all(tempDir);
+    }
+
 private:
     void WriteBuffer(std::vector<int>& buffer) override {
         std::sort(buffer.begin(), buffer.end());
 
         std::filesystem::create_directory(tempDir); //won't do anything if dir already exists
         std::string tapePath = tempDir + "/" + std::to_string(tapes.size());
-
         auto tmp = std::make_shared<FileTape>(tapePath, inputTape->GetConfig());
+
+        for (int i : buffer) {
+            tmp->Write(i);
+            tmp->MoveRight();
+        }
+
+        tmp->ResetPointer();
+
         tapes.push_back(tmp);
 
     }

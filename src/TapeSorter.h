@@ -6,6 +6,7 @@
 #define TAPEROOT_TAPESORTER_H
 
 #include "Tape.h"
+#include "TapeMergeAlgorithm.h"
 #include <iostream>
 #include <utility>
 #include <vector>
@@ -14,29 +15,28 @@
 
 class TapeSorter {
 public:
-    TapeSorter(std::shared_ptr<Tape> in, std::shared_ptr<Tape> out, size_t maxMemElements);
-
-    void SortTapeToOut();
+    TapeSorter(
+            const std::shared_ptr<Tape>& in,
+            const std::shared_ptr<Tape>& out,
+            const std::shared_ptr<TapeMergeAlgorithm>& mergeAlgorithm,
+            size_t maxMemElements);
 
     virtual ~TapeSorter();
+
+    void SortTapeToOut();
+    virtual std::shared_ptr<Tape> GetTmpTape() const = 0;
 
 private:
     void Split();
 
-    std::shared_ptr<Tape> MergeTwoTapes(const std::shared_ptr<Tape>& leftTape, const std::shared_ptr<Tape>& rightTape);
-
-    void MergeUp();
-
-    void WriteToOutput();
-
 protected:
     virtual void WriteBuffer(std::vector<int>&) = 0;
-    virtual std::shared_ptr<Tape> GetTmpTape() const = 0;
 
 
     std::shared_ptr<Tape> inputTape;
     std::shared_ptr<Tape> outputTape;
     std::vector<std::shared_ptr<Tape>> tapes;
+    std::shared_ptr<TapeMergeAlgorithm> mergeAlgorithm;
     size_t maxMemElements;
 };
 

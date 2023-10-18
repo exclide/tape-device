@@ -13,7 +13,11 @@
 
 class MemoryTapeSorter : public TapeSorter {
 public:
-    MemoryTapeSorter(const std::shared_ptr<MemoryTape>& in, const std::shared_ptr<MemoryTape>& out, size_t maxMemElements);
+    MemoryTapeSorter(
+            const std::shared_ptr<MemoryTape>& in,
+            const std::shared_ptr<MemoryTape>& out,
+            const std::shared_ptr<TapeMergeAlgorithm>& mergeAlgorithm,
+            size_t maxMemElements);
 
 private:
     void WriteBuffer(std::vector<int>& buffer) override;

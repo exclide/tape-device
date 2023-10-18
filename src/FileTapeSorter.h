@@ -14,7 +14,11 @@
 
 class FileTapeSorter : public TapeSorter {
 public:
-    FileTapeSorter(const std::shared_ptr<FileTape>& in, const std::shared_ptr<FileTape>& out, size_t maxMemElements);
+    FileTapeSorter(
+            const std::shared_ptr<FileTape> &in,
+            const std::shared_ptr<FileTape> &out,
+            const std::shared_ptr<TapeMergeAlgorithm>& mergeAlgorithm,
+            size_t maxMemElements);
 
     ~FileTapeSorter() override;
 

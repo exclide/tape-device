@@ -5,6 +5,7 @@
 #include "FileTapeSorter.h"
 #include "TapeSorter.h"
 #include "MemoryTapeSorter.h"
+#include "FindMinMergeAlgorithm.h"
 
 
 int main(int argc, char* argv[]) {
@@ -35,11 +36,16 @@ int main(int argc, char* argv[]) {
 
     auto outputTape = std::make_shared<FileTape>(outputTapePath, tapeConfig);
 
-    auto sorter = std::make_shared<FileTapeSorter>(inputTape, outputTape, tapeConfig.maxMemoryElements);
+    auto sorter = std::make_shared<FileTapeSorter>(
+            inputTape,
+            outputTape,
+            std::make_shared<FindMinMergeAlgorithm>(),
+            tapeConfig.maxMemoryElements);
+
     sorter->SortTapeToOut();
 
     while (!outputTape->Eot()) {
-        std::cout << outputTape->Read();
+        std::cout << outputTape->Read() << " ";
         outputTape->MoveRight();
     }
 

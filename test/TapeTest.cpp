@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include "../src/MemoryTape.h"
 #include "../src/MemoryTapeSorter.h"
+#include "../src/FindMinMergeAlgorithm.h"
 
 TEST(TestTapeSorter, TestSortingCorrect) {
     std::vector<int> inputData = {5, 1, 4, 9, 3, 2, 8, 0, 6, 7, 5, 3, 2};
@@ -20,7 +21,12 @@ TEST(TestTapeSorter, TestSortingCorrect) {
         auto outTape = std::make_shared<MemoryTape>(std::vector<int>{}, cfg);
 
 
-        auto tapeSorter = std::make_shared<MemoryTapeSorter>(inputTape, outTape, cfg.maxMemoryElements);
+        auto tapeSorter = std::make_shared<MemoryTapeSorter>(
+                inputTape,
+                outTape,
+                std::make_shared<FindMinMergeAlgorithm>(),
+                cfg.maxMemoryElements);
+
         tapeSorter->SortTapeToOut();
 
         while (!outTape->Eot()) {

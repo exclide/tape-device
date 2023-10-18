@@ -4,9 +4,12 @@
 
 #include "FileTapeSorter.h"
 
-FileTapeSorter::FileTapeSorter(const std::shared_ptr<FileTape> &in, const std::shared_ptr<FileTape> &out,
-                               size_t maxMemElements)
-        : TapeSorter(in, out, maxMemElements) {
+FileTapeSorter::FileTapeSorter(
+        const std::shared_ptr<FileTape> &in,
+        const std::shared_ptr<FileTape> &out,
+        const std::shared_ptr<TapeMergeAlgorithm>& mergeAlgorithm,
+        size_t maxMemElements)
+        : TapeSorter(in, out, mergeAlgorithm, maxMemElements) {
 }
 
 FileTapeSorter::~FileTapeSorter() {
@@ -15,10 +18,9 @@ FileTapeSorter::~FileTapeSorter() {
 }
 
 void FileTapeSorter::WriteBuffer(std::vector<int> &buffer) {
-    std::sort(buffer.begin(), buffer.end());
-
     std::filesystem::create_directory(tempDir); //won't do anything if dir already exists
     std::string tapePath = tempDir + "/" + std::to_string(tapes.size());
+
     auto tmp = std::make_shared<FileTape>(tapePath, inputTape->GetConfig());
 
     for (int i : buffer) {
@@ -26,7 +28,7 @@ void FileTapeSorter::WriteBuffer(std::vector<int> &buffer) {
         tmp->MoveRight();
     }
 
-    tmp->ResetPointer();
+    tmp->MoveLeft();
 
     tapes.push_back(tmp);
 }

@@ -4,14 +4,23 @@
 
 #include "MemoryTapeSorter.h"
 
-MemoryTapeSorter::MemoryTapeSorter(const std::shared_ptr<MemoryTape> &in, const std::shared_ptr<MemoryTape> &out,
-                                   size_t maxMemElements)
-        : TapeSorter(in, out, maxMemElements) {
+MemoryTapeSorter::MemoryTapeSorter(
+        const std::shared_ptr<MemoryTape> &in,
+        const std::shared_ptr<MemoryTape> &out,
+        const std::shared_ptr<TapeMergeAlgorithm>& mergeAlgorithm,
+        size_t maxMemElements)
+        : TapeSorter(in, out, mergeAlgorithm, maxMemElements) {
 }
 
 void MemoryTapeSorter::WriteBuffer(std::vector<int> &buffer) {
-    std::sort(buffer.begin(), buffer.end());
     auto tmp = std::make_shared<MemoryTape>(buffer, inputTape->GetConfig());
+
+    while (!tmp->Eot()) { //emulate tape write
+        tmp->MoveRight();
+    }
+
+    tmp->MoveLeft();
+
     tapes.push_back(tmp);
 }
 

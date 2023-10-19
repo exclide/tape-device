@@ -6,6 +6,7 @@
 #include "TapeSorter.h"
 #include "MemoryTapeSorter.h"
 #include "FindMinMergeAlgorithm.h"
+#include "TwoUpMergeAlgorithm.h"
 
 
 int main(int argc, char* argv[]) {
@@ -22,7 +23,13 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    std::vector<int> testInput = {2, 6, 1, 0, 7, 3, 9, 5, 4, 8};
+    const int testSz = 100;
+    std::vector<int> testInput(testSz);
+
+
+    for (int i = 0; i < testSz; i++) {
+        testInput[i] = rand() % 20;
+    }
 
     auto inputTape = std::make_shared<FileTape>(inputTapePath, tapeConfig);
 
@@ -39,7 +46,7 @@ int main(int argc, char* argv[]) {
     auto sorter = std::make_shared<FileTapeSorter>(
             inputTape,
             outputTape,
-            std::make_shared<FindMinMergeAlgorithm>(),
+            std::make_shared<TwoUpMergeAlgorithm>(),
             tapeConfig.maxMemoryElements);
 
     sorter->SortTapeToOut();

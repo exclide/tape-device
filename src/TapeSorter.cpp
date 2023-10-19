@@ -9,7 +9,7 @@ TapeSorter::TapeSorter(
         const std::shared_ptr<Tape>& out,
         const std::shared_ptr<TapeMergeAlgorithm>& mergeAlgorithm,
         size_t maxMemElements)
-        : inputTape(std::move(in)), outputTape(std::move(out)), mergeAlgorithm(mergeAlgorithm), maxMemElements(maxMemElements) {
+        : inputTape(in), outputTape(out), mergeAlgorithm(mergeAlgorithm), maxMemElements(maxMemElements) {
 }
 
 void TapeSorter::SortTapeToOut() {

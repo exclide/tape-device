@@ -2,12 +2,12 @@
 // Created by asd on 18-Oct-23.
 //
 
-#ifndef TAPEROOT_FINDMINMERGEALGORITHM_H
-#define TAPEROOT_FINDMINMERGEALGORITHM_H
+#ifndef TAPEROOT_DIRECTWAYMERGEALGORITHM_H
+#define TAPEROOT_DIRECTWAYMERGEALGORITHM_H
 
 #include "TapeMergeAlgorithm.h"
 
-class FindMinMergeAlgorithm : public TapeMergeAlgorithm {
+class DirectWayMergeAlgorithm : public TapeMergeAlgorithm {
 public:
     void MergeTapesToOut(std::vector<std::shared_ptr<Tape>>& tapes, const std::shared_ptr<Tape>& outTape) override {
         while (!tapes.empty()) {
@@ -33,4 +33,4 @@ public:
     }
 };
 
-#endif //TAPEROOT_FINDMINMERGEALGORITHM_H
+#endif //TAPEROOT_DIRECTWAYMERGEALGORITHM_H

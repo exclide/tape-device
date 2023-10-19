@@ -5,7 +5,7 @@
 #include "FileTapeSorter.h"
 #include "TapeSorter.h"
 #include "MemoryTapeSorter.h"
-#include "FindMinMergeAlgorithm.h"
+#include "DirectWayMergeAlgorithm.h"
 #include "TwoUpMergeAlgorithm.h"
 
 

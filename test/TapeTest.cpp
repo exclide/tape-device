@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "../src/MemoryTape.h"
 #include "../src/MemoryTapeSorter.h"
-#include "../src/FindMinMergeAlgorithm.h"
+#include "../src/DirectWayMergeAlgorithm.h"
 #include "../src/TwoUpMergeAlgorithm.h"
 
 void TestBase(
@@ -43,7 +43,7 @@ TEST(TestTapeSorter, TestSortingCorrectFindMinMerge) {
     for (int i = 2; i <= inputData.size(); i++) {
         std::vector<int> outputData;
 
-        TestBase(inputData, outputData, std::make_shared<FindMinMergeAlgorithm>(), i);
+        TestBase(inputData, outputData, std::make_shared<DirectWayMergeAlgorithm>(), i);
 
         ASSERT_EQ(sortedInput, outputData);
     }
